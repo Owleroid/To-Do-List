@@ -8,7 +8,7 @@ exports.getTodos = (req, res, next) => {
             res.json(todos);
         })
         .catch((err) => {
-            console.log(err);
+            res.send(err);
         })
 };
 
@@ -18,36 +18,31 @@ exports.getTodo = (req, res, next) => {
             res.json(todo);
         })
         .catch((err) => {
-            console.log(err);
+            res.send(err);
         })
 };
 
 // POST
 
 exports.postTodo = (req, res, next) => {
-    const name = req.body.name;
-    const todo = new Todo({
-        name: name
-    });
-
-    todo.save()
-        .then(() => {
-            console.log("Todo with task:" + name + ". Has been created!");
+    Todo.create(req.body)
+        .then((newTodo) => {
+            res.status(201).json(newTodo);
         })
         .catch((err) => {
-            console.log(err)
-        });
+            res.send(err);
+        })
 };
 
 // PUT
 
 exports.putTodo = (req, res, next) => {
-    Todo.findByIdAndUpdate({_id: req.params.todoId}, req.body, {new: true})
+    Todo.findOneAndUpdate({_id: req.params.todoId}, req.body, {new: true})
         .then((todo) => {
             res.json(todo);
         })
         .catch((err) => {
-            console.log(err);
+            res.send(err);
         });
 };
 
@@ -59,6 +54,6 @@ exports.deleteTodo = (req, res, next) => {
             res.json({message: 'Deleted'});
         })
         .catch((err) => {
-            console.log(err);
+            res.send(err);
         });
 };
